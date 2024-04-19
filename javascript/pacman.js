@@ -6,6 +6,7 @@ class Pacman {
         this.height = height;
         this.speed = speed;
         this.direction = DIRECTION_RIGHT;
+        this.nextDirection = this.direction;
         this.currentFrame = 1;
         this.frameCount = 7;
         setInterval(() => {
@@ -61,10 +62,11 @@ class Pacman {
     }
 
     checkCollision() {
-        if (map[this.getMapY()][this.getMapX()] == 1
-            || map[this.getMapYRightSide()][this.getMapX()] == 1
-            || map[this.getMapY][this.getMapXRightSide()] == 1
-            || map[this.getMapYRightSide()][this.getMapXRightSide()] == 1
+        if (
+            map[this.getMapY()][this.getMapX()] == 1 ||
+            map[this.getMapYRightSide()][this.getMapX()] == 1 ||
+            map[this.getMapY()][this.getMapXRightSide()] == 1 ||
+            map[this.getMapYRightSide()][this.getMapXRightSide()] == 1
         ) {
             return true;
         }
@@ -76,7 +78,16 @@ class Pacman {
     }
 
     changeDirectionIfPossible() {
-
+        if (this.direction == this.nextDirection) return
+        let tempDirection = this.direction;
+        this.direction = this.nextDirection;
+        this.moveForwards;
+        if (this.checkCollision()) {
+            this.moveBackwards();
+            this.direction = tempDirection;
+        } else {
+            this.moveBackwards();
+        }
     }
 
     changeAnimation() {
