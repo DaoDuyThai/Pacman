@@ -15,6 +15,8 @@ let wallSpaceWidth = oneBlockSize / 1.5;
 let wallOffset = (oneBlockSize - wallSpaceWidth) / 2;
 let wallInnerColor = "black";
 
+let foodColor = "yellow";
+
 const DIRECTION_RIGHT = 4;
 const DIRECTION_UP = 3;
 const DIRECTION_LEFT = 2;
@@ -53,18 +55,36 @@ let map = [
 let gameLoop = () => {
     update();
     draw();
-    
+
 }
 
 let update = () => {
     pacman.moveProcess();
+    pacman.eat();
 }
 
 let draw = () => {
     createRect(0, 0, canvas.width, canvas.height, "black");
     drawWalls();
+    drawFoods();
 
     pacman.draw();
+}
+
+let drawFoods = () => {
+    for (let i = 0; i < map.length; i++) {
+        for (let j = 0; j < map[0].length; j++) {
+            if (map[i][j] == 2) {
+                createRect(
+                    j * oneBlockSize + oneBlockSize / 2,
+                    i * oneBlockSize + oneBlockSize / 2,
+                    oneBlockSize / 3,
+                    oneBlockSize / 3,
+                    foodColor
+                )
+            }
+        }
+    }
 }
 
 let gameInterval = setInterval(gameLoop, 1000 / fps)
