@@ -19,6 +19,7 @@ let ghostCount = 3;
 let foodColor = "yellow";
 let score = 0;
 let ghosts = [];
+let lives = 3;
 
 const DIRECTION_RIGHT = 4;
 const DIRECTION_UP = 3;
@@ -34,7 +35,7 @@ let ghostLocations = [
 ]
 
 
-
+let foodCount = 0;
 let map = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
@@ -65,6 +66,15 @@ let map = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ];
 
+for(let i = 0; i < map.length; i++) {
+    for(let j = 0; j < map[i].length; j++) {
+        if(map[i][j] == 2) {
+            foodCount++;
+        }
+    }
+
+}
+
 let randomTargetsForGhosts = [
     { x: 1 * oneBlockSize, y: 1 * oneBlockSize },
     { x: 1 * oneBlockSize, y: (map.length - 2) * oneBlockSize },
@@ -73,9 +83,8 @@ let randomTargetsForGhosts = [
 ]
 
 let gameLoop = () => {
-    update();
     draw();
-
+    update();
 }
 
 let update = () => {
@@ -84,7 +93,34 @@ let update = () => {
     for (let i = 0; i < ghosts.length; i++) {
         ghosts[i].moveProcess();
     }
+    if (pacman.checkGhostCollision()) {
+        console.log("hit")
+        restartGame();
+    }
+    if (score == foodCount) {
+        clearInterval(gameInterval);
+        drawGameWin();
+    }
+}
 
+let drawGameWin = () => {
+    canvasContext.font = "30px Pixelify Sans";
+    canvasContext.fillStyle = "white";
+    canvasContext.fillText("You Win", 200, 200);
+}
+
+let restartGame = () => {
+    createNewPacman();
+    createGhosts();
+    lives--;
+    if (lives == 0) {
+        gameOver();
+    }
+}
+
+let gameOver = () => {
+    clearInterval(gameInterval);
+    drawGameOver();
 }
 
 let draw = () => {
@@ -94,6 +130,13 @@ let draw = () => {
     pacman.draw();
     drawScore();
     drawGhosts();
+    drawLives();
+}
+
+let drawGameOver = () => {
+    canvasContext.font = "30px Pixelify Sans";
+    canvasContext.fillStyle = "white";
+    canvasContext.fillText("Game Over", 200, 200);
 }
 
 let drawGhosts = () => {
@@ -125,6 +168,14 @@ let drawScore = () => {
         0,
         oneBlockSize * (map.length + 1) + 10
     );
+}
+
+let drawLives = () => {
+    canvasContext.font = "30px Pixelify Sans";
+    canvasContext.fillStyle = "white";
+    canvasContext.fillText("Lives: " + lives,
+        200,
+        oneBlockSize * (map.length + 1) + 10)
 }
 
 let gameInterval = setInterval(gameLoop, 1000 / fps)
