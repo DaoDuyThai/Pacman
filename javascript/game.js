@@ -14,7 +14,7 @@ let wallColor = "#342DCA";
 let wallSpaceWidth = oneBlockSize / 1.5;
 let wallOffset = (oneBlockSize - wallSpaceWidth) / 2;
 let wallInnerColor = "black";
-let ghostCount = 4;
+let ghostCount = 3;
 
 let foodColor = "yellow";
 let score = 0;
